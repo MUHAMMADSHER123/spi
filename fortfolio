@@ -1,1 +1,1 @@
-uvicorn main:app --reload
+pip install fastapi pydantic uvicorn
