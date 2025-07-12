@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎵 Audio Yuklovchi</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .header {
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #4a5568;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .header p {
+      color: #718096;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+
+    .input-field:focus {
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .download-btn {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .download-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .download-btn:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .message.error {
+      background: #fed7d7;
+      color: #c53030;
+      border: 1px solid #feb2b2;
+    }
+
+    .message.success {
+      background: #c6f6d5;
+      color: #2f855a;
+      border: 1px solid #9ae6b4;
+    }
+
+    .features {
+      background: #f7fafc;
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+    }
+
+    .features h3 {
+      color: #4a5568;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .platforms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .platform {
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+      color: #4a5568;
+    }
+
+    .disclaimer {
+      margin-top: 20px;
+      color: #718096;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .platforms {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎵 Audio Yuklovchi</h1>
+      <p>YouTube, Instagram, X, Pinterest, Threads dan audio yuklab oling</p>
+    </div>
+
+    <form id="downloadForm">
+      <div class="form-group">
+        <input 
+          type="text" 
+          id="urlInput" 
+          class="input-field" 
+          placeholder="YouTube, Instagram, X, Pinterest, Threads linkini kiriting..."
+          required
+        >
+      </div>
+      
+      <button type="submit" id="downloadBtn" class="download-btn">
+        ⬇️ Yuklab olish
+      </button>
+    </form>
+
+    <div id="message"></div>
+
+    <div class="features">
+      <h3>📋 Qo'llab-quvvatlanadi:</h3>
+      <div class="platforms">
+        <div class="platform">🎥 YouTube</div>
+        <div class="platform">📸 Instagram</div>
+        <div class="platform">🐦 X (Twitter)</div>
+        <div class="platform">📌 Pinterest</div>
+        <div class="platform">🧵 Threads</div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ Faqat shaxsiy foydalanish uchun. Mualliflik huquqlariga hurmat bering.
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('downloadForm');
+    const urlInput = document.getElementById('urlInput');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const messageDiv = document.getElementById('message');
+
+    function showMessage(text, type) {
+      messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+      setTimeout(() => {
+        messageDiv.innerHTML = '';
+      }, 5000);
+    }
+
+    function setLoading(loading) {
+      downloadBtn.disabled = loading;
+      urlInput.disabled = loading;
+      
+      if (loading) {
+        downloadBtn.innerHTML = '<span class="loading"></span> Yuklanmoqda...';
+      } else {
+        downloadBtn.innerHTML = '⬇️ Yuklab olish';
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const url = urlInput.value.trim();
+      if (!url) {
+        showMessage('Iltimos, URL ni kiriting', 'error');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await fetch('http://localhost:5000/download', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          showMessage(error.error || 'Xatolik yuz berdi', 'error');
+          return;
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = downloadUrl;
+        a.download = 'audio.mp3';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+
+        showMessage('Audio muvaffaqiyatli yuklandi!', 'success');
+        urlInput.value = '';
+        
+      } catch (error) {
+        showMessage('Tarmoq xatosi yoki server ishlamayapti', 'error');
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // URL input focus
+    urlInput.addEventListener('focus', () => {
+      messageDiv.innerHTML = '';
+    });
+  </script>
+</body>
+</html> 

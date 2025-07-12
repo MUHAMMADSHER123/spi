@@ -1,3 +1,0 @@
-pip show fastapi
-pip show pydantic
-pip show uvicorn
